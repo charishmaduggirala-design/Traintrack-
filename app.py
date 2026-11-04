@@ -10,8 +10,7 @@ from email.message import EmailMessage
 
 load_dotenv()
 
-app = Flask(__name__,
-templates_folder="."
+app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(32))
 
 MAIL_USERNAME = os.getenv("MAIL_USERNAME")
