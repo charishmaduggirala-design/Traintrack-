@@ -1,0 +1,457 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackTrain - Seat Booking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4eaff, #e6d5ff);
+            color: #302044;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px #9c7ac044;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #7028a5;
+        }
+
+        .form-group {
+            margin: 18px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cdb6e8;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .seat-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .seat-group {
+            padding: 15px;
+            background: #faf6ff;
+            border: 1px solid #e0cff5;
+            border-radius: 12px;
+        }
+
+        .seat-group h3 {
+            text-align: center;
+            color: #7028a5;
+        }
+
+        .seats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .seat {
+            padding: 10px 2px;
+            text-align: center;
+            border-radius: 7px;
+            background: #e6dcf5;
+            cursor: pointer;
+            font-size: 13px;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+
+        .seat.selected {
+            background: #7028a5;
+            color: white;
+        }
+
+.seat.unavailable {
+    background: #bdbdbd;
+    color: #555;
+    cursor: not-allowed;
+    border: 2px solid #888;
+    opacity: 1;
+    pointer-events: none;
+}
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .box {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .available-box { background: #e6dcf5; }
+        .selected-box { background: #7028a5; }
+        .unavailable-box { background: #bdbdbd; }
+
+        .summary {
+            margin-top: 22px;
+            padding: 18px;
+            background: #f4eaff;
+            border-radius: 12px;
+        }
+
+        .summary p {
+            margin: 10px 0;
+            overflow-wrap: anywhere;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: #7028a5;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #551d82;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #7028a5;
+            text-decoration: none;
+        }
+
+        @media (max-width: 500px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>🚆 TrackTrain</h1>
+   <div class="form-group">
+    <label for="train_name">Select Train</label>
+    <select id="train_name" name="train_name" required>
+        <option value="">-- Choose Your Train --</option>
+        <option value="12727" {% if train_name == "12727" %}selected{% endif %}>12727 - Godavari Express</option>
+        <option value="12728" {% if train_name == "12728" %}selected{% endif %}>12728 - Godavari Express</option>
+        <option value="12759" {% if train_name == "12759" %}selected{% endif %}>12759 - Charminar Express</option>
+        <option value="12760" {% if train_name == "12760" %}selected{% endif %}>12760 - Charminar Express</option>
+        <option value="12703" {% if train_name == "12703" %}selected{% endif %}>12703 - Falaknuma Express</option>
+        <option value="12704" {% if train_name == "12704" %}selected{% endif %}>12704 - Falaknuma Express</option>
+        <option value="17015" {% if train_name == "17015" %}selected{% endif %}>17015 - Visakha Express</option>
+        <option value="17016" {% if train_name == "17016" %}selected{% endif %}>17016 - Visakha Express</option>
+    </select>
+</div>
+   
+
+    <form id="bookingForm" method="POST" action="{{ url_for('booking') }}">
+        <div class="form-group">
+    <label for="train_name">Select Train</label>
+    <select id="train_name" name="train_name" required>
+        <option value="">-- Choose Your Train --</option>
+        <option value="12727">12727 - Godavari Express</option>
+        <option value="12728">12728 - Godavari Express</option>
+        <option value="12759">12759 - Charminar Express</option>
+        <option value="12760">12760 - Charminar Express</option>
+        <option value="12703">12703 - Falaknuma Express</option>
+        <option value="12704">12704 - Falaknuma Express</option>
+        <option value="17015">17015 - Visakha Express</option>
+        <option value="17016">17016 - Visakha Express</option>
+    </select>
+</div>
+        <div class="form-group">
+            <label for="from_station">From Station</label>
+            <input type="text" id="from_station" name="from_station"
+                   placeholder="Enter starting station" required>
+        </div>
+
+
+        <div class="form-group">
+            <label for="to_station">To Station</label>
+            <input type="text" id="to_station" name="to_station"
+                   placeholder="Enter destination station" required>
+        </div>
+
+        <div class="form-group">
+            <label for="journey_date">Journey Date</label>
+            <input type="date" id="journey_date" name="journey_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="travel_class">Travel Class</label>
+            <select id="travel_class" name="travel_class" required>
+                <option value="General Class" data-price="200">General Class — ₹200 per seat</option>
+                <option value="Sleeper Class" data-price="350">Sleeper Class (SL) — ₹350 per seat</option>
+                <option value="AC 3-Tier" data-price="600">AC 3-Tier (3A) — ₹600 per seat</option>
+                <option value="First AC" data-price="1000">First AC (1A) — ₹1,000 per seat</option>
+            </select>
+        </div>
+
+        <h2>Select Your Seats</h2>
+
+        <div class="legend">
+            <span><i class="box available-box"></i> Available</span>
+            <span><i class="box selected-box"></i> Selected</span>
+            <span><i class="box unavailable-box"></i> Unavailable</span>
+        </div>
+
+        <div class="seat-groups">
+            <div class="seat-group">
+                <h3>Female Seats (15)</h3>
+                <div class="seats" id="femaleSeats"></div>
+            </div>
+
+            <div class="seat-group">
+                <h3>Divyangjan Seats (10)</h3>
+                <div class="seats" id="divyangjanSeats"></div>
+            </div>
+
+            <div class="seat-group">
+                <h3>General Seats (30)</h3>
+                <div class="seats" id="generalSeats"></div>
+            </div>
+        </div>
+
+        <input type="hidden" name="seats" id="selectedSeats">
+        <input type="hidden" name="passenger_count" id="passengerCount">
+
+        <div class="summary">
+            <h3>Booking Summary</h3>
+            <p><strong>Selected Seats:</strong> <span id="seatDisplay">None</span></p>
+            <p><strong>Number of Passengers:</strong> <span id="countDisplay">0</span></p>
+            <p><strong>Price per Seat:</strong> ₹<span id="priceDisplay">200</span></p>
+            <p><strong>Total Amount:</strong> ₹<span id="totalDisplay">0</span></p>
+        </div>
+
+        <button type="submit">Confirm Booking</button>
+<div id="successMessage" style="
+    display: {{ 'block' if request.args.get('success') == '1' else 'none' }};
+    margin-top: 15px;
+    padding: 15px;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #28a745;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;">
+    ✅ YOUR TICKET HAS BEEN BOOKED SUCCESSFULLY!
+    <br><br>
+    <a href="{{ url_for('my_bookings') }}">View My Bookings</a>
+</div>
+    </form>
+
+    <a class="back-link" href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+</div>
+ 
+
+<script>
+    const selectedSeats = new Set();
+    let bookedSeats = new Set();
+
+    function createSeats(containerId, prefix, count) {
+        const container = document.getElementById(containerId);
+
+        for (let i = 1; i <= count; i++) {
+            const seatName = prefix + i;
+            const seat = document.createElement("div");
+
+            seat.className = "seat";
+            seat.textContent = seatName;
+            seat.dataset.seat = seatName;
+            seat.setAttribute("role", "button");
+            seat.setAttribute("tabindex", "0");
+
+            seat.addEventListener("click", () => toggleSeat(seat));
+
+            seat.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    toggleSeat(seat);
+                }
+            });
+
+            container.appendChild(seat);
+        }
+    }
+
+    function toggleSeat(seat) {
+        const seatName = seat.dataset.seat;
+
+        if (seat.classList.contains("unavailable")) return;
+
+        if (selectedSeats.has(seatName)) {
+            selectedSeats.delete(seatName);
+            seat.classList.remove("selected");
+        } else {
+            selectedSeats.add(seatName);
+            seat.classList.add("selected");
+        }
+
+        updateSummary();
+    }
+
+    function updateSeatDisplay() {
+        document.querySelectorAll(".seat").forEach(seat => {
+            const seatName = seat.dataset.seat;
+            const isBooked = bookedSeats.has(seatName);
+
+            seat.classList.toggle("unavailable", isBooked);
+
+            if (isBooked) {
+                selectedSeats.delete(seatName);
+                seat.classList.remove("selected");
+                seat.textContent = seatName + " ✓";
+                seat.setAttribute("aria-disabled", "true");
+                seat.setAttribute("title", "Already booked");
+            } else {
+                seat.textContent = seatName;
+                seat.removeAttribute("aria-disabled");
+                seat.removeAttribute("title");
+            }
+        });
+
+        updateSummary();
+    }
+
+    async function fetchBookedSeats() {
+        const train = document.getElementById("train_name").value;
+        const from = document.getElementById("from_station").value.trim();
+        const to = document.getElementById("to_station").value.trim();
+        const date = document.getElementById("journey_date").value;
+        const travelClass = document.getElementById("travel_class").value;
+
+        if (!train || !from || !to || !date || !travelClass) {
+            bookedSeats.clear();
+            updateSeatDisplay();
+            return;
+        }
+
+        const params = new URLSearchParams({
+            train_name: train,
+            from_station: from,
+            to_station: to,
+            journey_date: date,
+            travel_class: travelClass
+        });
+
+        try {
+            const response = await fetch("/booked-seats?" + params.toString());
+
+            if (!response.ok) throw new Error("Could not load booked seats");
+
+            const data = await response.json();
+            bookedSeats = new Set(data.booked_seats || []);
+            updateSeatDisplay();
+        } catch (error) {
+            alert("Unable to check booked seats. Please try again.");
+        }
+    }
+
+    function updateSummary() {
+        const seats = Array.from(selectedSeats);
+        const classSelect = document.getElementById("travel_class");
+        const price = Number(
+            classSelect.selectedOptions[0]?.dataset.price || 0
+        );
+
+        document.getElementById("seatDisplay").textContent =
+            seats.length ? seats.join(", ") : "None";
+
+        document.getElementById("countDisplay").textContent = seats.length;
+        document.getElementById("priceDisplay").textContent = price;
+        document.getElementById("totalDisplay").textContent = seats.length * price;
+
+        document.getElementById("selectedSeats").value = seats.join(",");
+        document.getElementById("passengerCount").value = seats.length;
+    }
+
+    createSeats("femaleSeats", "F", 15);
+    createSeats("divyangjanSeats", "S", 10);
+    createSeats("generalSeats", "G", 30);
+
+    const journeyFields = [
+        "train_name",
+        "from_station",
+        "to_station",
+        "journey_date",
+        "travel_class"
+    ];
+
+    journeyFields.forEach(id => {
+        document.getElementById(id).addEventListener("change", fetchBookedSeats);
+    });
+
+    document.getElementById("from_station").addEventListener("input", fetchBookedSeats);
+    document.getElementById("to_station").addEventListener("input", fetchBookedSeats);
+
+    const dateInput = document.getElementById("journey_date");
+    const today = new Date();
+    const localToday = new Date(
+        today.getTime() - today.getTimezoneOffset() * 60000
+    ).toISOString().split("T")[0];
+
+    dateInput.min = localToday;
+
+    document.getElementById("bookingForm").addEventListener("submit", event => {
+        if (selectedSeats.size === 0) {
+            event.preventDefault();
+            alert("Please select at least one seat.");
+            return;
+        }
+
+        if (
+            document.getElementById("from_station").value.trim().toLowerCase() ===
+            document.getElementById("to_station").value.trim().toLowerCase()
+        ) {
+            event.preventDefault();
+            alert("Starting station and destination must be different.");
+        }
+    });
+
+    updateSummary();
+    fetchBookedSeats();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - TrackTrain</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eee7ff, #d9e7ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-card {
+            background: white;
+            width: 350px;
+            max-width: 85%;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .avatar {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #7048e8;
+            color: white;
+            font-size: 38px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            color: #5632b5;
+            margin-bottom: 10px;
+        }
+
+        .email {
+            color: #555;
+            overflow-wrap: anywhere;
+            margin: 20px 0;
+        }
+
+        .button {
+            display: block;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            background: #7048e8;
+            color: white;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #5632b5;
+        }
+
+        .back {
+            background: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-card">
+        <div class="avatar">👤</div>
+
+        <h1>My Profile</h1>
+        <p>Welcome to TrackTrain!</p>
+
+        <p class="email">
+            <strong>Email:</strong><br>
+            {{ email }}
+        </p>
+
+        <a href="{{ url_for('dashboard') }}" class="button">
+            Back to Dashboard
+        </a>
+
+        <a href="{{ url_for('my_bookings') }}" class="button">
+            My Bookings
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="button back">
+            Sign Out
+        </a>
+    </div>
+</body>
+</html>

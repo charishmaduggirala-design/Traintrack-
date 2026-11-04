@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainTrack Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #191970, #5145a8, #a18cd1);
+            min-height: 100vh;
+            color: #191970;
+        }
+
+        /* Top bar */
+        header {
+            background: #fff8e7;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 4px 15px #0003;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .menu-btn {
+            background: #191970;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 27px;
+            width: 45px;
+            height: 43px;
+            cursor: pointer;
+        }
+
+        .brand h1 {
+            font-size: 25px;
+        }
+
+        .brand p {
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* Side menu */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 270px;
+            height: 100%;
+            overflow-y: auto;
+            background: #fff8e7;
+            padding: 25px 15px;
+            z-index: 30;
+            transition: left 0.3s ease;
+            box-shadow: 5px 0 20px #0003;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .side-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding: 5px;
+        }
+
+        .side-heading h2 {
+            font-size: 21px;
+        }
+
+        .close-btn {
+            border: none;
+            background: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #191970;
+        }
+
+        .menu-link {
+            display: block;
+            text-decoration: none;
+            color: #191970;
+            font-weight: bold;
+            padding: 15px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: 0.2s;
+        }
+
+        .menu-link:hover {
+            background: #ded8ff;
+            transform: translateX(4px);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0007;
+            z-index: 20;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Main content */
+        .container {
+            width: 92%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .welcome {
+            background: #fff8e7;
+            border-radius: 22px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 0 8px 25px #0002;
+            overflow: hidden;
+        }
+
+        .welcome h2 {
+            font-size: clamp(25px, 4vw, 38px);
+            margin-bottom: 12px;
+        }
+
+        .welcome h2 span {
+            color: #7954c7;
+        }
+
+        .welcome p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Animated railway track */
+        .railway {
+            height: 145px;
+            position: relative;
+            margin: 25px 0 15px;
+            overflow: hidden;
+            background: linear-gradient(#e9e4ff, #fff8e7);
+            border-radius: 15px;
+        }
+
+        .railway::before,
+        .railway::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 7px;
+            background: #777;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .railway::before {
+            bottom: 30px;
+        }
+
+        .railway::after {
+            bottom: 52px;
+        }
+
+        .sleepers {
+            position: absolute;
+            bottom: 19px;
+            left: 0;
+            width: 200%;
+            height: 45px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0 22px,
+                #795548 22px 30px,
+                transparent 30px 48px
+            );
+            animation: trackMove 1s linear infinite;
+        }
+
+        @keyframes trackMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-48px); }
+        }
+
+        /* Feature cards */
+        .section-title {
+            text-align: center;
+            color: white;
+            font-size: 27px;
+            margin: 30px 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff8e7;
+            padding: 25px 20px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 6px 18px #0002;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px #0003;
+        }
+
+        .icon {
+            font-size: 43px;
+            margin-bottom: 13px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            min-height: 42px;
+            margin-bottom: 18px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #191970;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #5145a8;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 25px 10px;
+        }
+
+        @media (max-width: 500px) {
+            header {
+                padding: 14px;
+            }
+
+            .brand h1 {
+                font-size: 21px;
+            }
+
+            .container {
+                width: 94%;
+                margin-top: 18px;
+            }
+
+            .welcome {
+                padding: 25px 13px;
+            }
+
+            .railway {
+                height: 120px;
+            }
+
+            .moving-train {
+                font-size: 62px;
+                bottom: 47px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .moving-train,
+            .sleepers {
+                animation-duration: 20s;
+            }
+        }
+        /* Realistic train engine and coaches */
+.real-train {
+    position: absolute;
+    bottom: 48px;
+    left: -550px;
+    display: flex;
+    align-items: flex-end;
+    height: 65px;
+    z-index: 3;
+    animation: realTrainMove 12s linear infinite;
+}
+
+.engine {
+    width: 100px;
+    height: 52px;
+    background: #c62828;
+    border: 3px solid #8e1717;
+    border-radius: 12px 25px 3px 3px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.front-window {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 22px;
+    height: 20px;
+    background: #bde7ff;
+    border: 3px solid #eee;
+    border-radius: 4px;
+}
+
+.engine-window {
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    width: 28px;
+    height: 20px;
+    background: #bde7ff;
+    border: 3px solid #eee;
+    border-radius: 4px;
+}
+
+.headlight {
+    position: absolute;
+    right: -4px;
+    bottom: 4px;
+    width: 9px;
+    height: 9px;
+    background: #ffeb3b;
+    border-radius: 50%;
+}
+
+.coach {
+    width: 105px;
+    height: 43px;
+    background: #eeeeee;
+    border: 3px solid #a5a5a5;
+    border-bottom: 7px solid #c62828;
+    border-radius: 8px 8px 3px 3px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.windows {
+    color: #194b70;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+@keyframes realTrainMove {
+    from {
+        left: -550px;
+    }
+    to {
+        left: calc(100% + 20px);
+    }
+}
+
+   
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <button class="menu-btn" id="menuBtn"
+                aria-label="Open menu" aria-expanded="false">☰</button>
+
+        <div class="brand">
+            <h1>🚆 TRAINTRACK</h1>
+            <p>Your Journey, Our Priority</p>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <nav class="sidebar" id="sidebar" aria-label="Main menu">
+        <div class="side-heading">
+            <h2>🚆 TrainTrack Menu</h2>
+            <button class="close-btn" id="closeBtn"
+                    aria-label="Close menu">×</button>
+        </div>
+
+        <a class="menu-link" href="#tracking">🚉 Train Tracking</a>
+<a class="menu-link" href="{{ url_for('my_bookings') }}">🎫 My Booking</a>
+<a class="menu-link" href="{{ url_for('profile') }}">👤 Account &amp; Profile</a>
+        <a class="menu-link" href="#complaint">📝 Raise Complaint</a>
+        <a class="menu-link" href="#settings">⚙️ Settings</a>
+        <a class="menu-link" href="#emergency">🆘 Emergency Help</a>
+    </nav>
+
+
+    <main class="container">
+
+        <section class="welcome">
+            <h2>WELCOME TO <span>TRAINTRACK..!</span></h2>
+            <p>Your journey, our priority.</p>
+            <p>Track your train and explore your journey with us.</p>
+
+         <div class="railway" aria-label="Animated train on railway tracks">
+    <div class="sleepers"></div>
+
+    <div class="real-train">
+        <div class="engine">
+            <div class="front-window"></div>
+            <div class="engine-window"></div>
+            <div class="headlight"></div>
+        </div>
+
+        <div class="coach"><div class="windows">▮ ▮ ▮ ▮ ▮</div></div>
+        <div class="coach"><div class="windows">▮ ▮ ▮ ▮ ▮</div></div>
+        <div class="coach"><div class="windows">▮ ▮ ▮ ▮ ▮</div></div>
+        <div class="coach"><div class="windows">▮ ▮ ▮ ▮ ▮</div></div>
+    </div>
+</div>
+            <p>🚆 Making every journey easier and smarter!</p>
+        </section>
+
+        <h2 class="section-title">Explore Your Dashboard</h2>
+
+        <section class="cards">
+<div class="card" id="tracking">
+    <div class="icon">🚉</div>
+    <h3>Train Tracking</h3>
+    <p>Check train tracking information.</p>
+    <a href="{{ url_for('train_tracking') }}" class="button">
+        🚆 Track Train
+    </a>
+            </div>
+
+            <div class="card" id="booking">
+                <div class="icon">💺</div>
+                <h3>Seat Booking</h3>
+                <p>Explore your train seat booking.</p>
+                <a href="{{ url_for('booking') }}" class="button">Book Seats</a>
+            </div>
+
+<div class="card" id="my-booking">
+    <div class="icon">🎫</div>
+    <h3>My Booking</h3>
+    <p>View your saved booking details.</p>
+    <a href="{{ url_for('my_bookings') }}" class="button">
+        🎫 My Booking
+    </a>
+</div>
+
+            <div class="card" id="profile">
+                <div class="icon">👤</div>
+                <h3>Account &amp; Profile</h3>
+                <p>Manage your account and profile.</p>
+               <a href="{{ url_for('profile') }}" class="button">My Profile</a>
+            </div>
+
+            <div class="card" id="complaint">
+                <div class="icon">📝</div>
+                <h3>Raise Complaint</h3>
+                <p>Send a complaint or share feedback.</p>
+                <a href="#" class="button">Raise Complaint</a>
+            </div>
+
+            <div class="card" id="settings">
+                <div class="icon">⚙️</div>
+                <h3>Settings</h3>
+                <p>Explore your app settings.</p>
+                <a href="#" class="button">Settings</a>
+            </div>
+
+            <div class="card" id="emergency">
+                <div class="icon">🆘</div>
+                <h3>Emergency Help</h3>
+                <p>Find emergency and safety information.</p>
+                <a href="#" class="button">Get Help</a>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        © 2026 TrainTrack | Safe Travels 🚆
+    </footer>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const menuBtn = document.getElementById("menuBtn");
+        const closeBtn = document.getElementById("closeBtn");
+
+        function openMenu() {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+            menuBtn.setAttribute("aria-expanded", "true");
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+            menuBtn.setAttribute("aria-expanded", "false");
+        }
+
+        menuBtn.addEventListener("click", openMenu);
+        closeBtn.addEventListener("click", closeMenu);
+        overlay.addEventListener("click", closeMenu);
+
+        document.querySelectorAll(".menu-link").forEach(function(link) {
+            link.addEventListener("click", closeMenu);
+        });
+    </script>
+
+</body>
+</html> 

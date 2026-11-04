@@ -1,0 +1,382 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Tracking - TrackTrain</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eee5ff, #f8f4ff);
+            color: #30204b;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px #4c287b20;
+        }
+
+        h1 {
+            text-align: center;
+            color: #6c35a5;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            background: #f6f0ff;
+            padding: 22px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 12px 0 7px;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cdb5ed;
+            border-radius: 9px;
+            font-size: 15px;
+            background: white;
+            color: #30204b;
+        }
+
+        .search-button, .back {
+            background: #7541ad;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .search-button {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .search-button:hover, .back:hover {
+            background: #542b83;
+        }
+
+        .train-card {
+            background: #f6f0ff;
+            border-radius: 15px;
+            padding: 22px;
+        }
+
+        .train-card h2 {
+            color: #6c35a5;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .route-list {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .stop {
+            display: flex;
+            align-items: center;
+            min-height: 65px;
+            gap: 15px;
+        }
+
+        .marker {
+            width: 24px;
+            height: 24px;
+            border: 4px solid #7541ad;
+            border-radius: 50%;
+            background: white;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .stop:not(:last-child) .marker::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 45px;
+            background: #b69add;
+            top: 16px;
+            left: 2px;
+        }
+
+        .stop-name {
+            font-weight: bold;
+            color: #4c287b;
+        }
+
+        .stop-label {
+            color: #777;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .train-icon {
+            display: inline-block;
+            margin-right: 7px;
+            animation: trainMove 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes trainMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(12px); }
+        }
+
+        .status {
+            background: #e2f8e9;
+            color: #16753a;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 12px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .back {
+            display: block;
+            width: fit-content;
+            margin: 25px auto 0;
+        }
+
+        @media (max-width: 500px) {
+            .container { padding: 16px; }
+            .train-card { padding: 16px; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>🚆 Train Tracking</h1>
+    <p class="subtitle">Search a route between two stations</p>
+
+    <form class="search-box" onsubmit="searchTrain(event)">
+
+        <label for="from">🚉 From Station</label>
+        <select id="from" required>
+            <option value="">Select Starting Station</option>
+            <option>Hyderabad</option>
+            <option>Visakhapatnam</option>
+            <option>Vijayawada</option>
+            <option>Guntur</option>
+            <option>Tirupati</option>
+            <option>Warangal</option>
+            <option>Rajahmundry</option>
+            <option>Kakinada</option>
+            <option>Nellore</option>
+            <option>Chennai</option>
+            <option>Bengaluru</option>
+            <option>Mumbai</option>
+            <option>Delhi</option>
+            <option>Kolkata</option>
+            <option>Pune</option>
+            <option>Kochi</option>
+        </select>
+
+        <label for="to">🚉 To Station</label>
+        <select id="to" required>
+            <option value="">Select Destination Station</option>
+            <option>Hyderabad</option>
+            <option>Visakhapatnam</option>
+            <option>Vijayawada</option>
+            <option>Guntur</option>
+            <option>Tirupati</option>
+            <option>Warangal</option>
+            <option>Rajahmundry</option>
+            <option>Kakinada</option>
+            <option>Nellore</option>
+            <option>Chennai</option>
+            <option>Bengaluru</option>
+            <option>Mumbai</option>
+            <option>Delhi</option>
+            <option>Kolkata</option>
+            <option>Pune</option>
+            <option>Kochi</option>
+        </select>
+
+        <button type="submit" class="search-button">
+            🔍 Search Train
+        </button>
+    </form>
+
+    <div id="result" style="display:none;">
+        <div class="train-card">
+            <h2>🚆 Route Tracking</h2>
+
+            <div id="routeList" class="route-list"></div>
+
+            <div class="status">Demo Route Preview</div>
+
+            <p class="note">
+                Intermediate stops shown here are examples, not verified
+                train schedules. Live train location is not connected.
+            </p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="back">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+<script>
+const allStations = [
+    "Hyderabad",
+    "Visakhapatnam",
+    "Vijayawada",
+    "Guntur",
+    "Tirupati",
+    "Warangal",
+    "Rajahmundry",
+    "Kakinada",
+    "Nellore",
+    "Chennai",
+    "Bengaluru",
+    "Mumbai",
+    "Delhi",
+    "Kolkata",
+    "Pune",
+    "Kochi",
+    "Ongole",
+    "Anantapur",
+    "Khammam",
+    "Gudur"
+];
+
+function searchTrain(event) {
+    event.preventDefault();
+
+    const from = document.getElementById("from").value;
+    const to = document.getElementById("to").value;
+
+    if (from === to) {
+        alert("Please select two different stations.");
+        return;
+    }
+
+    // Choose three demo intermediate stations.
+    const middleStations = allStations.filter(
+        station => station !== from && station !== to
+    );
+
+    const startIndex = allStations.indexOf(from);
+    const endIndex = allStations.indexOf(to);
+
+    let route = [from];
+
+    for (let i = 1; i <= 3; i++) {
+        let index = Math.floor(
+            startIndex + (endIndex - startIndex) * i / 4
+        );
+
+        if (index < 0) index = 0;
+        if (index >= allStations.length) {
+            index = allStations.length - 1;
+        }
+
+        let station = allStations[index];
+
+        if (
+            station !== from &&
+            station !== to &&
+            !route.includes(station)
+        ) {
+            route.push(station);
+        }
+    }
+
+    // Fill any missing intermediate stops.
+    for (const station of middleStations) {
+        if (route.length >= 4) break;
+        if (!route.includes(station)) {
+            route.push(station);
+        }
+    }
+
+    route.push(to);
+
+    const routeList = document.getElementById("routeList");
+    routeList.replaceChildren();
+
+    route.forEach((station, index) => {
+        const stop = document.createElement("div");
+        stop.className = "stop";
+
+        const marker = document.createElement("div");
+        marker.className = "marker";
+
+        const details = document.createElement("div");
+
+        const name = document.createElement("div");
+        name.className = "stop-name";
+
+        if (index === 0) {
+            name.innerHTML = '<span class="train-icon">🚆</span>';
+        }
+
+        name.appendChild(document.createTextNode(station));
+
+        const label = document.createElement("div");
+        label.className = "stop-label";
+
+        if (index === 0) {
+            label.textContent = "Starting Station";
+        } else if (index === route.length - 1) {
+            label.textContent = "Destination";
+        } else {
+            label.textContent = "Demo Intermediate Station";
+        }
+
+        details.appendChild(name);
+        details.appendChild(label);
+
+        stop.appendChild(marker);
+        stop.appendChild(details);
+        routeList.appendChild(stop);
+    });
+
+    document.getElementById("result").style.display = "block";
+}
+</script>
+</body>
+</html>

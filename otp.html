@@ -1,0 +1,118 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMyTrain - Secure Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #191970;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .otp-box {
+            width: 100%;
+            max-width: 430px;
+            background: #FFF8E7;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .train {
+            font-size: 75px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #191970;
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            color: #191970;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 8px;
+            margin-bottom: 22px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #191970;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .footer {
+            margin-top: 22px;
+            color: #555;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="otp-box">
+        <div class="train">🚂</div>
+
+        <h1>BOOKMYTRAIN</h1>
+        <p class="subtitle">Secure Login</p>
+
+        <form action="/verify-otp" method="POST">
+            <label for="otp">ENTER OTP</label>
+<input
+    type="text"
+    id="otp"
+    name="otp"
+    placeholder="------"
+    inputmode="numeric"
+    pattern="[0-9]{6}"
+    maxlength="6"
+    required
+>
+
+            <button type="submit">VERIFY OTP</button>
+        </form>
+
+        <p class="footer">OTP sent to your Gmail</p>
+    </div>
+</body>
+</html>

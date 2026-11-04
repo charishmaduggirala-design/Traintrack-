@@ -1,0 +1,96 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMyTrain - Register</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #191970;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 430px;
+            background: #FFF8E7;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #191970;
+            margin-bottom: 25px;
+            font-size: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #191970;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        p {
+            margin-top: 22px;
+            color: #191970;
+            font-size: 14px;
+        }
+
+        a {
+            color: #191970;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-box">
+        <h1>CREATE ACCOUNT</h1>
+
+        <form>
+            <input type="text" placeholder="First Name" required>
+            <input type="text" placeholder="Last Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <input type="password" placeholder="Create Password" required>
+            <input type="password" placeholder="Confirm Password" required>
+
+            <button type="button">REGISTER NOW</button>
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="/login">Sign In</a>
+        </p>
+    </div>
+</body>
+</html>

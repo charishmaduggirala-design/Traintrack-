@@ -1,0 +1,179 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackTrain - My Bookings</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f4eaff, #e6d5ff);
+            color: #302044;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #7028a5;
+        }
+
+        .ticket {
+            background: white;
+            border-radius: 15px;
+            padding: 22px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px #9c7ac044;
+            border-left: 6px solid #7028a5;
+        }
+
+        .ticket h2 {
+            color: #7028a5;
+            margin-top: 0;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .detail {
+            padding: 12px;
+            background: #f8f2ff;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            font-size: 13px;
+            color: #765d89;
+            margin-bottom: 6px;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+
+        .amount {
+            color: #7028a5;
+            font-size: 21px;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #7028a5;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background: #551d82;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>🚆 My Bookings</h1>
+
+    {% if bookings %}
+        {% for booking in bookings %}
+        <div class="ticket">
+            <h2>🎫 Train Ticket #{{ booking['id'] }}</h2>
+
+            <div class="details">
+                <div class="detail">
+                    <div class="label">From Station</div>
+                    <div class="value">{{ booking['from_station'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">To Station</div>
+                    <div class="value">{{ booking['to_station'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Journey Date</div>
+                    <div class="value">{{ booking['journey_date'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Travel Class</div>
+                    <div class="value">{{ booking['travel_class'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Selected Seats</div>
+                    <div class="value">{{ booking['seats'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Passengers</div>
+                    <div class="value">{{ booking['passenger_count'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Total Amount</div>
+                    <div class="value amount">₹{{ booking['total_price'] }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="label">Booking Created</div>
+                    <div class="value">{{ booking['created_at'] }}</div>
+                </div>
+                       </div>
+
+            <form action="{{ url_for('cancel_ticket', booking_id=booking['id']) }}"
+                  method="POST"
+                  onsubmit="return confirm('Are you sure you want to cancel this ticket?');">
+
+                <button type="submit"
+                        style="background:#dc3545; color:white; border:none;
+                               padding:12px 20px; border-radius:8px;
+                               cursor:pointer; margin-top:15px;">
+                    Cancel Ticket
+                </button>
+            </form>
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            <h2>No bookings yet!</h2>
+            <p>Your booked tickets will appear here.</p>
+        </div>
+    {% endif %}
+
+    <div class="center">
+        <a href="{{ url_for('booking') }}" class="button">Book a Train</a>
+        <a href="{{ url_for('dashboard') }}" class="button">Back to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>
